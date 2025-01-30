@@ -1,0 +1,50 @@
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title id="title">Extract events from Device SD</title>
+	<link rel="shortcut icon" type="image/png" href="pics/favicon-32x32.png">
+	<style>
+		body { font-family: Arial, sans-serif;  padding: 20px; }
+		#fileName { margin-top: 10px; font-style: italic; }
+	</style>
+</head>
+
+<body>
+	<script src="jszip.min.js"></script>
+	<script src="FileSaver.js"></script>
+	<script src="extractEvents/main.js"></script>
+
+	<input type="file" id="zipUpload" accept=".zip" hidden>
+	<button onclick="document.getElementById('zipUpload').click()">Upload a ZIP</button>
+	<p id="fileName"></p>
+	<div id="showAfterZipDownloaded" hidden>
+		<textarea id="evalText" rows="20" cols="150" style="display:block;font-size:20px;">
+
+var start = new Date('Sep 3 2024 17:00').valueOf() / 1000;
+var end =   new Date('Oct 29 2024 11:00').valueOf() / 1000;
+var relevantEvents = events.filter(evt=>evt.timestamp > start && evt.timestamp < end);
+ 	
+
+new Object({
+   takes: relevantEvents.filter(evt=>evt.action == 'take'),
+   misses: relevantEvents.filter(evt=>evt.action == 'missed'),
+   guides: relevantEvents.filter(evt=>evt.action == 'guide_answer'),
+});
+
+		</textarea>
+		<button onclick="runEvaluation()" style="display:block;margin-top:10px;">Run</button>
+	</div>
+	<div id="missingGuidesAlert" style="color:red;margin-top:10px" hidden>
+		Some guides might be missing.
+	</div>
+	<div id="useOutput" style="margin:10px;" hidden>
+		<button onclick="copyClipboard()">Copy to Clipboard</button>
+		<button onclick="download()">Download</button>
+	</div>
+	<div id="output" style="white-space:pre-wrap;"></div>
+
+</body>
+</html>
+
+
